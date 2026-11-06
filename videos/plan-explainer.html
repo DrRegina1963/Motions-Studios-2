@@ -1,0 +1,188 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../brand.css">
+<style>
+  .abs { position: absolute; }
+
+  /* Title block: big at first, then shrinks to a header at top-left */
+  #title { left: 140px; top: 0; transform-origin: 0 0; }
+  #titleMain {
+    font-family: var(--font-headline); font-weight: 800;
+    font-size: 150px; letter-spacing: -0.02em; line-height: 1;
+    color: var(--brand-headline);
+  }
+  #titleSub {
+    margin-top: 24px;
+    font-family: var(--font-headline); font-weight: 500;
+    font-size: 60px; letter-spacing: -0.01em; line-height: 1.1;
+    color: var(--brand-headline);
+  }
+  #rule { left: 140px; height: 4px; border-radius: 2px; background: var(--brand-chrome); }
+
+  /* Steps: three columns */
+  .step { top: 450px; width: 480px; }
+  .num {
+    font-family: var(--font-headline); font-weight: 800;
+    font-size: 190px; line-height: 1;
+    color: var(--brand-text); text-shadow: var(--brand-glow);
+  }
+  .stepHead {
+    margin-top: 26px;
+    font-family: var(--font-headline); font-weight: 700;
+    font-size: 64px; letter-spacing: -0.01em;
+    color: var(--brand-headline);
+  }
+  .stepLine {
+    margin-top: 16px;
+    font-family: var(--font-body); font-weight: 400;
+    font-size: 34px; line-height: 1.35;
+    color: var(--brand-muted);
+  }
+
+  /* End card */
+  #end { left: 0; right: 0; top: 330px; text-align: center; }
+  #endName {
+    font-family: var(--font-headline); font-weight: 800;
+    font-size: 120px; letter-spacing: -0.02em;
+    color: var(--brand-headline);
+  }
+  #endRule {
+    position: relative; left: 50%;
+    height: 4px; margin-top: 36px; border-radius: 2px;
+    background: var(--brand-chrome);
+  }
+  #endCta {
+    margin-top: 48px;
+    font-family: var(--font-body); font-weight: 500;
+    font-size: 48px; line-height: 1.4;
+    color: var(--brand-text); text-shadow: var(--brand-glow);
+  }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="abs" id="title">
+    <div id="titleMain">P.L.A.N.™:</div>
+    <div id="titleSub">Preparation Leads to Active Navigation.</div>
+  </div>
+  <div class="abs" id="rule"></div>
+
+  <div class="abs step" id="step1" style="left:140px">
+    <div class="num">1</div>
+    <div class="stepHead">Prepare</div>
+    <div class="stepLine">Get ready with intention and a clear purpose.</div>
+  </div>
+  <div class="abs step" id="step2" style="left:720px">
+    <div class="num">2</div>
+    <div class="stepHead">Lead</div>
+    <div class="stepLine">Move forward with clarity and confidence.</div>
+  </div>
+  <div class="abs step" id="step3" style="left:1300px">
+    <div class="num">3</div>
+    <div class="stepHead">Act</div>
+    <div class="stepLine">Take the next meaningful step toward your goals.</div>
+  </div>
+
+  <div class="abs" id="end">
+    <div id="endName">Rehkamp AI Consulting</div>
+    <div id="endRule"></div>
+    <div id="endCta">Let’s build your next step together.<br>Visit rehkampaiconsulting.com.</div>
+  </div>
+</div>
+<script>
+  window.DURATION = 15;
+  window.SIZE = [1920, 1080];
+
+  const W = SIZE[0], H = SIZE[1];
+  const stage = document.getElementById('stage');
+  stage.style.width = W + 'px';
+  stage.style.height = H + 'px';
+
+  // ---- helpers ----
+  const clamp = x => Math.min(1, Math.max(0, x));
+  const between = (t, a, b) => clamp((t - a) / (b - a));
+  const lerp = (a, b, p) => a + (b - a) * p;
+  const easeOut = x => 1 - Math.pow(1 - x, 3);
+  const easeInOut = x => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+  const $ = id => document.getElementById(id);
+
+  // Fade + rise in starting at `start`
+  const enterP = (t, start, dur = 0.8) => easeOut(between(t, start, start + dur));
+  function rise(el, p, dist = 40, extraY = 0, alpha = 1) {
+    el.style.opacity = p * alpha;
+    el.style.transform = `translateY(${(1 - p) * dist + extraY}px)`;
+  }
+
+  // ---- timings (seconds) ----
+  const T = {
+    titleIn: 0.2, subIn: 0.6, ruleIn: [0.2, 1.4],
+    toHeader: [2.5, 3.3],
+    steps: [3.0, 5.5, 8.0],
+    allBright: [10.5, 11.1],
+    exit: [11.5, 12.5],
+    endName: 12.2, endRule: [12.6, 13.6], endCta: 13.0,
+  };
+
+  // ---- layout measured once (fonts are loaded before rendering) ----
+  const title = $('title'), titleMain = $('titleMain'), titleSub = $('titleSub'), rule = $('rule');
+  const big = { scale: 1 };
+  const header = { top: 90, scale: 0.55 };
+  const RULE_W = W - 280;
+
+  const steps = [1, 2, 3].map(i => {
+    const el = $('step' + i);
+    return { el, parts: [...el.children] };
+  });
+
+  const endName = $('endName'), endRule = $('endRule'), endCta = $('endCta');
+  const END_RULE_W = 720;
+
+  window.render = function (t) {
+    // Everything except the end card drifts up and fades out together
+    const exitP = easeInOut(between(t, ...T.exit));
+    const exitY = -60 * exitP;
+    const exitA = 1 - exitP;
+
+    // Title: big and centered vertically, then glides to a small header
+    // (measured here, after fonts have loaded; untransformed height)
+    const titleH = title.offsetHeight;
+    big.top = (H - titleH) / 2 - 40;
+    const h = easeInOut(between(t, ...T.toHeader));
+    const top = lerp(big.top, header.top, h);
+    const scale = lerp(big.scale, header.scale, h);
+    title.style.opacity = exitA;
+    title.style.transform = `translateY(${top + exitY}px) scale(${scale})`;
+    rise(titleMain, enterP(t, T.titleIn));
+    rise(titleSub, enterP(t, T.subIn));
+
+    // Chrome line sits just under the title and travels with it
+    rule.style.top = (top + titleH * scale + lerp(44, 28, h) + exitY) + 'px';
+    rule.style.width = RULE_W * easeOut(between(t, ...T.ruleIn)) + 'px';
+    rule.style.opacity = exitA;
+
+    // Steps: each appears in turn; earlier ones dim, then all brighten together
+    const bright = easeInOut(between(t, ...T.allBright));
+    steps.forEach((s, i) => {
+      const start = T.steps[i];
+      const next = T.steps[i + 1];
+      const dim = next !== undefined ? easeInOut(between(t, next, next + 0.6)) : 0;
+      const level = 1 - 0.55 * dim * (1 - bright);
+      s.parts.forEach((part, j) => {
+        rise(part, enterP(t, start + j * 0.15), 50, exitY, level * exitA);
+      });
+    });
+
+    // End card
+    rise(endName, enterP(t, T.endName, 1.0), 50);
+    const rw = END_RULE_W * easeOut(between(t, ...T.endRule));
+    endRule.style.width = rw + 'px';
+    endRule.style.marginLeft = -rw / 2 + 'px';
+    rise(endCta, enterP(t, T.endCta, 1.0), 40);
+  };
+
+  render(0);
+</script>
+</body>
+</html>
