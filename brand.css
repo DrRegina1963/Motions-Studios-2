@@ -4,7 +4,7 @@
 */
 
 /* Inter (free Google Font, SIL Open Font License; see fonts/Inter-OFL.txt).
-   STAND-IN until a body font is chosen. Variable font: any weight 100-900. */
+   Brand body and headline font. Variable font: any weight 100-900. */
 @font-face {
   font-family: "Brand Inter";
   src: url("fonts/Inter-latin.woff2") format("woff2");
@@ -19,7 +19,7 @@
   --brand-text: #D7AE57;        /* gold (body text) */
   --brand-headline: #F7F5F0;    /* white (headlines) - soft polished white */
   --brand-accent: #C3CAD4;      /* silver chrome (accent / details) */
-  --brand-muted: #7F8BA3;       /* muted - STAND-IN, replace with your hex */
+  --brand-muted: #7F8BA3;       /* muted (secondary text) */
 
   /* Silver chrome, for lines, borders and shapes: background: var(--brand-chrome) */
   --brand-chrome: linear-gradient(180deg, #F2F4F7 0%, #C3CAD4 45%, #8C95A3 55%, #DDE1E7 100%);
@@ -27,7 +27,7 @@
   /* Gold glow, for text: text-shadow: var(--brand-glow) */
   --brand-glow: 0 0 12px rgba(215, 174, 87, 0.55), 0 0 32px rgba(215, 174, 87, 0.30);
 
-  /* Fonts (both STAND-INs until you choose; headline is set in white) */
+  /* Fonts (headlines are set in white, body text in gold) */
   --font-headline: "Brand Inter", "Helvetica Neue", Arial, sans-serif;
   --font-body: "Brand Inter", "Helvetica Neue", Arial, sans-serif;
   --font-mono: "JetBrains Mono", "DejaVu Sans Mono", monospace;
