@@ -21,11 +21,11 @@
   }
   #rule { left: 140px; height: 4px; border-radius: 2px; background: var(--brand-chrome); }
 
-  /* Steps: three columns */
-  .step { top: 450px; width: 480px; }
+  /* Steps: four columns */
+  .step { top: 450px; width: 380px; }
   .num {
     font-family: var(--font-headline); font-weight: 800;
-    font-size: 190px; line-height: 1;
+    font-size: 170px; line-height: 1;
     color: var(--brand-text); text-shadow: var(--brand-glow);
   }
   .stepHead {
@@ -37,7 +37,7 @@
   .stepLine {
     margin-top: 16px;
     font-family: var(--font-body); font-weight: 400;
-    font-size: 34px; line-height: 1.35;
+    font-size: 32px; line-height: 1.35;
     color: var(--brand-muted);
   }
 
@@ -74,15 +74,20 @@
     <div class="stepHead">Prepare</div>
     <div class="stepLine">Get ready with intention and a clear purpose.</div>
   </div>
-  <div class="abs step" id="step2" style="left:720px">
+  <div class="abs step" id="step2" style="left:560px">
     <div class="num">2</div>
     <div class="stepHead">Lead</div>
     <div class="stepLine">Move forward with clarity and confidence.</div>
   </div>
-  <div class="abs step" id="step3" style="left:1300px">
+  <div class="abs step" id="step3" style="left:980px">
     <div class="num">3</div>
     <div class="stepHead">Act</div>
     <div class="stepLine">Take the next meaningful step toward your goals.</div>
+  </div>
+  <div class="abs step" id="step4" style="left:1400px">
+    <div class="num">4</div>
+    <div class="stepHead">Navigate</div>
+    <div class="stepLine">Adjust with purpose as you grow.</div>
   </div>
 
   <div class="abs" id="end">
@@ -119,7 +124,7 @@
   const T = {
     titleIn: 0.2, subIn: 0.6, ruleIn: [0.2, 1.4],
     toHeader: [2.5, 3.3],
-    steps: [3.0, 5.5, 8.0],
+    steps: [3.0, 5.0, 7.0, 9.0],
     allBright: [10.5, 11.1],
     exit: [11.5, 12.5],
     endName: 12.2, endRule: [12.6, 13.6], endCta: 13.0,
@@ -131,7 +136,7 @@
   const header = { top: 90, scale: 0.55 };
   const RULE_W = W - 280;
 
-  const steps = [1, 2, 3].map(i => {
+  const steps = [1, 2, 3, 4].map(i => {
     const el = $('step' + i);
     return { el, parts: [...el.children] };
   });
