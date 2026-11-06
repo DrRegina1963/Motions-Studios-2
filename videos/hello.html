@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../brand.css">
+<style>
+  #title {
+    position: absolute;
+    left: 0; right: 0; top: 50%;
+    text-align: center;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 120px;
+    letter-spacing: -0.02em;
+    margin-top: -90px;
+  }
+  #bar {
+    position: absolute;
+    left: 50%; top: 50%;
+    height: 10px;
+    margin-top: 70px;
+    border-radius: 5px;
+    background: var(--brand-accent);
+  }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="title">Hello from my studio</div>
+  <div id="bar"></div>
+</div>
+<script>
+  window.DURATION = 3;
+  window.SIZE = [1920, 1080];
+
+  const stage = document.getElementById('stage');
+  stage.style.width = SIZE[0] + 'px';
+  stage.style.height = SIZE[1] + 'px';
+
+  // Helpers: clamp to 0..1, progress between two times, easing
+  const clamp = x => Math.min(1, Math.max(0, x));
+  const between = (t, a, b) => clamp((t - a) / (b - a));
+  const easeOut = x => 1 - Math.pow(1 - x, 3);
+
+  const title = document.getElementById('title');
+  const bar = document.getElementById('bar');
+
+  // Draw the exact frame at time t (seconds). Only depends on t.
+  window.render = function (t) {
+    const inP = easeOut(between(t, 0.1, 0.9));   // text slides up and fades in
+    const barP = easeOut(between(t, 0.6, 1.4));  // underline grows
+    const outP = between(t, 2.6, 3.0);           // everything fades out at the end
+
+    title.style.opacity = inP * (1 - outP);
+    title.style.transform = `translateY(${(1 - inP) * 60}px)`;
+
+    const w = 520 * barP;
+    bar.style.width = w + 'px';
+    bar.style.marginLeft = -w / 2 + 'px';
+    bar.style.opacity = 1 - outP;
+  };
+
+  render(0);
+</script>
+</body>
+</html>

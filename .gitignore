@@ -1,1 +1,3 @@
 node_modules/
+# quick-check images from --stills (not uploaded)
+out/stills/

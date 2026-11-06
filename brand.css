@@ -1,0 +1,34 @@
+/*
+  Brand settings. Change these values and every video picks them up.
+  Fonts must be installed on the rendering machine (or loaded from a local
+  file with @font-face) so every render looks the same.
+*/
+:root {
+  /* Colors */
+  --brand-bg: #0f1b2d;        /* background */
+  --brand-ink: #f5f3ee;       /* main text */
+  --brand-accent: #ff8a3d;    /* highlight color */
+  --brand-accent-2: #4cc9b0;  /* second highlight */
+  --brand-muted: #8a97ab;     /* secondary text */
+
+  /* Fonts */
+  --font-display: "Inter Display", "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "DejaVu Sans Mono", monospace;
+}
+
+/* Shared base for every video page */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--font-body);
+}
+
+#stage {
+  position: relative;
+  overflow: hidden;
+  background: var(--brand-bg);
+}
