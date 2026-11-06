@@ -1,20 +1,40 @@
 /*
   Brand settings. Change these values and every video picks them up.
-  Fonts must be installed on the rendering machine (or loaded from a local
-  file with @font-face) so every render looks the same.
+  Fonts load from the local fonts/ folder, so renders work offline.
 */
+
+/* Inter (free Google Font, SIL Open Font License; see fonts/Inter-OFL.txt).
+   STAND-IN until a body font is chosen. Variable font: any weight 100-900. */
+@font-face {
+  font-family: "Brand Inter";
+  src: url("fonts/Inter-latin.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: block;
+}
+
 :root {
   /* Colors */
-  --brand-bg: #0f1b2d;        /* background */
-  --brand-ink: #f5f3ee;       /* main text */
-  --brand-accent: #ff8a3d;    /* highlight color */
-  --brand-accent-2: #4cc9b0;  /* second highlight */
-  --brand-muted: #8a97ab;     /* secondary text */
+  --brand-bg: #0B1730;          /* deep navy (background) */
+  --brand-text: #D7AE57;        /* gold (body text) */
+  --brand-headline: #F7F5F0;    /* white (headlines) - soft polished white */
+  --brand-accent: #C3CAD4;      /* silver chrome (accent / details) */
+  --brand-muted: #7F8BA3;       /* muted - STAND-IN, replace with your hex */
 
-  /* Fonts */
-  --font-display: "Inter Display", "Inter", "Helvetica Neue", Arial, sans-serif;
-  --font-body: "Inter", "Helvetica Neue", Arial, sans-serif;
+  /* Silver chrome, for lines, borders and shapes: background: var(--brand-chrome) */
+  --brand-chrome: linear-gradient(180deg, #F2F4F7 0%, #C3CAD4 45%, #8C95A3 55%, #DDE1E7 100%);
+
+  /* Gold glow, for text: text-shadow: var(--brand-glow) */
+  --brand-glow: 0 0 12px rgba(215, 174, 87, 0.55), 0 0 32px rgba(215, 174, 87, 0.30);
+
+  /* Fonts (both STAND-INs until you choose; headline is set in white) */
+  --font-headline: "Brand Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Brand Inter", "Helvetica Neue", Arial, sans-serif;
   --font-mono: "JetBrains Mono", "DejaVu Sans Mono", monospace;
+
+  /* Older names, kept so existing videos still work */
+  --brand-ink: var(--brand-text);
+  --font-display: var(--font-headline);
 }
 
 /* Shared base for every video page */
@@ -23,7 +43,7 @@ html, body {
   padding: 0;
   overflow: hidden;
   background: var(--brand-bg);
-  color: var(--brand-ink);
+  color: var(--brand-text);
   font-family: var(--font-body);
 }
 

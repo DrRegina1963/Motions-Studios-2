@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../brand.css">
+<style>
+  .headline {
+    position: absolute; left: 140px; top: 110px;
+    font-family: var(--font-headline);
+    font-weight: 700; font-size: 84px; letter-spacing: -0.02em;
+    color: var(--brand-headline);
+  }
+  .rule {
+    position: absolute; left: 140px; top: 225px;
+    height: 4px; border-radius: 2px;
+    background: var(--brand-chrome);
+  }
+  .swatches {
+    position: absolute; left: 140px; top: 300px;
+    display: flex; gap: 40px;
+  }
+  .swatch { width: 300px; }
+  .chip {
+    height: 230px; border-radius: 22px;
+    border: 2px solid rgba(195, 202, 212, 0.35);
+    box-sizing: border-box;
+  }
+  .name {
+    margin-top: 22px;
+    font-family: var(--font-body); font-weight: 600; font-size: 30px;
+    color: var(--brand-headline);
+  }
+  .hex {
+    margin-top: 6px;
+    font-family: var(--font-mono); font-size: 26px;
+    color: var(--brand-muted);
+  }
+  .fonts {
+    position: absolute; left: 140px; top: 760px;
+    display: flex; gap: 120px;
+  }
+  .label {
+    font-family: var(--font-mono); font-size: 22px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--brand-muted);
+    margin-bottom: 14px;
+  }
+  .sample-headline {
+    font-family: var(--font-headline); font-weight: 700; font-size: 64px;
+    color: var(--brand-headline);
+  }
+  .sample-body {
+    font-family: var(--font-body); font-weight: 400; font-size: 40px;
+    color: var(--brand-text); text-shadow: var(--brand-glow);
+    line-height: 1.35;
+  }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="headline" id="headline">Brand check</div>
+  <div class="rule" id="rule"></div>
+  <div class="swatches" id="swatches"></div>
+  <div class="fonts">
+    <div class="fontblock" id="fontHead">
+      <div class="label">Headline font</div>
+      <div class="sample-headline">Aa Headline</div>
+    </div>
+    <div class="fontblock" id="fontBody">
+      <div class="label">Body font</div>
+      <div class="sample-body">The quick brown fox jumps<br>over the lazy dog</div>
+    </div>
+  </div>
+</div>
+<script>
+  window.DURATION = 5;
+  window.SIZE = [1920, 1080];
+
+  const stage = document.getElementById('stage');
+  stage.style.width = SIZE[0] + 'px';
+  stage.style.height = SIZE[1] + 'px';
+
+  // Each swatch reads its color straight from brand.css, so the labels always match.
+  const COLORS = [
+    ['Background', '--brand-bg'],
+    ['Text (gold)', '--brand-text'],
+    ['Headline', '--brand-headline'],
+    ['Accent (silver)', '--brand-accent'],
+    ['Muted', '--brand-muted'],
+  ];
+  const css = getComputedStyle(document.documentElement);
+  const holder = document.getElementById('swatches');
+  const swatchEls = COLORS.map(([name, v]) => {
+    const hex = css.getPropertyValue(v).trim().toUpperCase();
+    const el = document.createElement('div');
+    el.className = 'swatch';
+    el.innerHTML = `<div class="chip" style="background:var(${v})"></div>
+                    <div class="name">${name}</div><div class="hex">${hex}</div>`;
+    holder.appendChild(el);
+    return el;
+  });
+
+  const clamp = x => Math.min(1, Math.max(0, x));
+  const between = (t, a, b) => clamp((t - a) / (b - a));
+  const easeOut = x => 1 - Math.pow(1 - x, 3);
+
+  // Fade + rise in, starting at time `start`
+  function enter(el, t, start, dur = 0.6, rise = 40) {
+    const p = easeOut(between(t, start, start + dur));
+    el.style.opacity = p;
+    el.style.transform = `translateY(${(1 - p) * rise}px)`;
+  }
+
+  const headline = document.getElementById('headline');
+  const rule = document.getElementById('rule');
+  const fontHead = document.getElementById('fontHead');
+  const fontBody = document.getElementById('fontBody');
+
+  window.render = function (t) {
+    enter(headline, t, 0.1);
+    rule.style.width = 1640 * easeOut(between(t, 0.4, 1.3)) + 'px';
+    swatchEls.forEach((el, i) => enter(el, t, 0.7 + i * 0.18));
+    enter(fontHead, t, 1.9);
+    enter(fontBody, t, 2.15);
+    // Holds still from about 2.8s to the end so everything can be read.
+  };
+
+  render(0);
+</script>
+</body>
+</html>
